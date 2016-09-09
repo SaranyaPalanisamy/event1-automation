@@ -1,0 +1,199 @@
+package com.event;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class UserRegistrationTest {
+
+	UserRegistration userRegistration;
+
+	User user;
+
+	@Before
+	public void setUp() {
+		userRegistration = new UserRegistration();
+		user = new User();
+	}
+
+	@After
+	public void tearDown() {
+		userRegistration = null;
+		user = null;
+	}
+
+	@Test
+	public void testValidateForWrongMailFormat() throws RegistrationException {
+		user.setEmail("karthickcts.com");
+		user.setAge(20);
+		user.setName("Kar");
+
+		try {
+			userRegistration.validate(user);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Invalid email address", re.getMessage());
+		}
+	}
+
+	@Test
+	public void testValidateForIncorrectAge() throws RegistrationException {
+		user.setEmail("karthick@cts.com");
+		user.setAge(15);
+		user.setName("Kar");
+
+		try {
+			userRegistration.validate(user);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Age must be 18 and above", re.getMessage());
+		}
+
+	}
+
+	@Test
+	public void testValidateForNameIsNull() throws RegistrationException {
+		user.setEmail("karthick@cts.com");
+		user.setAge(20);
+		user.setName("");
+
+		try {
+			userRegistration.validate(user);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Firstname can not be empty", re.getMessage());
+		}
+
+	}
+
+	@Test
+	public void testValidateFirstNameForEmpty() throws RegistrationException {
+		String name = "";
+
+		try {
+			userRegistration.validateFirstName(name);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Firstname can not be empty", re.getMessage());
+		}
+	}
+
+	@Test
+	public void testValidateFirstName() throws RegistrationException {
+		String name = "Kar";
+
+		boolean actualVal = userRegistration.validateFirstName(name);
+
+		Assert.assertTrue(actualVal);
+	}
+
+	@Test
+	public void testValidateEmailAddressNotContainsAtSymbol()
+			throws RegistrationException {
+		String mail = "Kar.com";
+
+		try {
+			userRegistration.validateEmailAddress(mail);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Invalid email address", re.getMessage());
+		}
+	}
+
+	@Test
+	public void testValidateEmailAddressContainsSpecialSymbol()
+			throws RegistrationException {
+		String mail = "Kar==thick@cts.com";
+
+		try {
+			userRegistration.validateEmailAddress(mail);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Invalid email address", re.getMessage());
+		}
+	}
+
+	@Test
+	public void testValidateEmailAddressNotContainsDotSymbol()
+			throws RegistrationException {
+		String mail = "Kar@com";
+
+		try {
+			userRegistration.validateEmailAddress(mail);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Invalid email address", re.getMessage());
+		}
+	}
+
+	@Test
+	public void testValidateEmailAddressWithSubDomains()
+			throws RegistrationException {
+		String mail = "Karthick@cts.com.in";
+
+		boolean actualVal = userRegistration.validateEmailAddress(mail);
+
+		Assert.assertTrue(actualVal);
+
+	}
+
+	@Test
+	public void testValidateEmailAddress() throws RegistrationException {
+		String mail = "Karthick@cts.com";
+
+		boolean actualVal = userRegistration.validateEmailAddress(mail);
+
+		Assert.assertTrue(actualVal);
+
+	}
+
+	@Test
+	public void testValidateAgeForLessThan18() throws RegistrationException {
+		// Set inputs
+		int age = 15;
+
+		try {
+			userRegistration.validateAge(age);
+			Assert.fail();
+		} catch (RegistrationException re) {
+			Assert.assertEquals("Age must be 18 and above", re.getMessage());
+		}
+
+	}
+
+	@Test
+	public void testValidateAgeForEqualTo18() throws RegistrationException {
+		// Set inputs
+		int age = 18;
+
+		boolean actualVal = userRegistration.validateAge(age);
+
+		Assert.assertTrue(actualVal);
+
+	}
+
+	@Test
+	public void testValidateAgeForAbove18() throws RegistrationException {
+		// Set inputs
+		int age = 18;
+
+		boolean actualVal = userRegistration.validateAge(age);
+
+		Assert.assertTrue(actualVal);
+
+	}
+
+	@Test
+	public void testValidate() throws RegistrationException {
+		user.setEmail("karthick@cts.com");
+		user.setAge(20);
+		user.setName("Kar");
+
+		boolean actualVal = userRegistration.validate(user);
+
+		Assert.assertTrue(actualVal);
+
+	}
+
+}
